@@ -3,27 +3,26 @@
 # Set the default region and project ID
 #gcloud config set compute/region europe-west1
 #export PROJECT_ID=project-diss2024
-mkdir ./kube-cloud_db
-cd kube-cloud_db
-git clone https://github.com/GoogleCloudPlatform/kubernetes-engine-samples/quickstarts/wordpress-persistent-disks/ .
-WORKING_DIR=/kube-cloud_db/wordpress-persistent-disks
+#git clone https://github.com/GoogleCloudPlatform/kubernetes-engine-samples/quickstarts/wordpress-persistent-disks/ .
+#WORKING_DIR=./wordpress-persistent-disks
 
 # Enable the GKE and Cloud SQL Admin APIs
 #gcloud services enable container.googleapis.com sqladmin.googleapis.com
 
 # Create a GKE cluster named 'kube-cloud_db'
+REGION=europe-west1
 CLUSTER_NAME=kube-cloud-db
-gcloud container clusters create-auto $CLUSTER_NAME
+gcloud container clusters create-auto $CLUSTER_NAME --region $REGION
 
 # Get credentials for the cluster
-gcloud container clusters get-credentials $CLUSTER_NAME --region europe-west1
+gcloud container clusters get-credentials $CLUSTER_NAME
 
 # Create a PVC for WordPress storage
 kubectl apply -f wordpress-volumeclaim.yaml
 
 # Create a Cloud SQL for MySQL instance
 INSTANCE_NAME=wordpress-cloud-sql
-gcloud sql instances create $INSTANCE_NAME
+gcloud sql instances create $INSTANCE_NAME --region $REGION
 
 # Set the instance connection name
 export INSTANCE_CONNECTION_NAME=$(gcloud sql instances describe $INSTANCE_NAME --format='value(connectionName)')
@@ -45,8 +44,7 @@ kubectl create secret generic cloudsql-db-credentials --from-literal username=wo
 kubectl create secret generic cloudsql-instance-credentials --from-file key.json
 
 # Deploy WordPress
-cat $WORKING_DIR/wordpress_cloudsql.yaml.template | envsubst > $WORKING_DIR/wordpress_cloudsql.yaml
-kubectl create -f $WORKING_DIR/wordpress_cloudsql.yaml
+kubectl create -f wordpress_cloudsql.yaml
 
 # Expose the WordPress service
 kubectl create -f wordpress-service.yaml
