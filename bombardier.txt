@@ -1,4 +1,0 @@
-docker pull alpine/bombardier:latest
-
-docker run -ti --rm alpine/bombardier -c 200 -d 10s -l http://www.google.com
-# Bombarding http://www.google.com for 10s using 200 connections

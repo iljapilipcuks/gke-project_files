@@ -28,9 +28,10 @@ CLOUD_SQL_PASSWORD=sqlpassword
 gcloud sql databases create wordpress --instance $INSTANCE_NAME
 gcloud sql users create wordpress --host=% --instance $INSTANCE_NAME --password $CLOUD_SQL_PASSWORD
 
+# Create secret for database credentials, name and address
 kubectl create secret generic cloudsql-db-credentials --from-literal username=wordpress --from-literal password=$CLOUD_SQL_PASSWORD --from-literal db_host=$SQL_ADDRESS --from-literal database=wordpress
 
-# Deploy WordPress
+# Deploy WordPress config files
 kubectl create -f ./wordpress-cloudsql.yaml
 kubectl get pod -l app=wordpress --watch
-#kubectl get svc -l app=wordpress --watch
+kubectl get svc -l app=wordpress --watch
