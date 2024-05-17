@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Set the default region and project ID
+# Setting up the default region and project ID
 gcloud config set project gke-project-417209
 gcloud config set compute/region europe-west6
 PROJECT_ID=gke-project-417209
@@ -33,5 +33,5 @@ kubectl create secret generic cloudsql-db-credentials --from-literal username=wo
 
 # Deploy WordPress config files
 kubectl create -f ./wordpress-cloudsql.yaml
-kubectl get pod -l app=wordpress --watch
-kubectl get svc -l app=wordpress --watch
+kubectl get pod -l app=wordpress
+kubectl get svc -l app=wordpress

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-REGION=europe-west6
+# Setting up the default region and project ID
 gcloud config set compute/region $REGION
-WORKING_DIR=/home/ilja_pilipchuks/Project/k8s-stateful_db/
-PROJECT_ID=gke-project-417209
+gcloud config set project gke-project-417209
+REGION=europe-west6
 CLUSTER_NAME=kube-stateful-db
 gcloud services enable container.googleapis.com sqladmin.googleapis.com
 
@@ -13,3 +13,4 @@ gcloud container clusters create-auto $CLUSTER_NAME --region $REGION
 gcloud container clusters get-credentials $CLUSTER_NAME --region $REGION
 
 kubectl apply -k ./
+kubectl get svc -l app=wordpress
