@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Packages installed for testing:
-# apt-get update
-# apt-get install bombardier
-# apt-get install default-mysql-client
-# apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+# sudo apt-get update
+# sudo apt-get install -y bombardier
+# sudo apt-get install -y default-mysql-client
+# sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # $1-ip address of tested application database
 DBADD=$1

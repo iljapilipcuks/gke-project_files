@@ -41,7 +41,9 @@ spec:
     matchLabels:
       app: wordpress
       tier: mysql
-  replicas: 2
+  replicas: 3
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -70,14 +72,13 @@ spec:
         - containerPort: 3306
           name: mysql
         volumeMounts:
-        - name: mysql-persistent-storage
+        - name: mysql-storage
           mountPath: /var/lib/mysql
   volumeClaimTemplates:
   - metadata:
-      name: mysql-persistent-storage
+      name: mysql-storage
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "mysql-class"
       resources:
         requests:
           storage: 3Gi
