@@ -1,20 +1,17 @@
 #!/bin/bash
 
 # Setting up the default region and project ID
-gcloud config set project gke-project-417209
-gcloud config set compute/region europe-west6
 PROJECT_ID=gke-project-417209
 REGION=europe-west6
+gcloud config set project $PROJECT_ID       
+gcloud config set compute/region $REGION
 
 # Enable the GKE and Cloud SQL Admin APIs
 gcloud services enable container.googleapis.com sqladmin.googleapis.com
 
 # Create a GKE cluster named k8s-wordpress
 CLUSTER_NAME=k8s-wordpress
-gcloud container clusters create $CLUSTER_NAME \
-  --num-nodes 1 \
-  --machine-type n1-standard-2 \
-  --region $REGION
+gcloud container clusters create-auto $CLUSTER_NAME --region $REGION
 
 # Get credentials for the cluster
 gcloud container clusters get-credentials $CLUSTER_NAME

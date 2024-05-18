@@ -1,4 +1,4 @@
-# Wordpress service
+### Wordpress service
 apiVersion: v1
 kind: Service
 metadata:
@@ -13,7 +13,7 @@ spec:
     tier: frontend
   type: LoadBalancer
 ---
-# Persistent volume claim
+### Wordpress Persistent volume claim
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -27,7 +27,7 @@ spec:
     requests:
       storage: 5Gi
 ---
-# Wordpress deployment
+### Wordpress deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -52,7 +52,7 @@ spec:
         name: wordpress
         env:
         - name: WORDPRESS_DB_HOST
-          value: wordpress-mysql
+          value: mysql
         - name: WORDPRESS_DB_PASSWORD
           valueFrom:
             secretKeyRef:

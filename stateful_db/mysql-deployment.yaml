@@ -1,39 +1,37 @@
-### Mysql service
+### Mysql Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: wordpress-mysql
+  name: mysql
   labels:
     app: wordpress
 spec:
   ports:
-    - protocol: TCP
-      port: 3306
-      targetPort: 3306
+    - port: 3306
   selector:
     app: wordpress
     tier: mysql
   type: LoadBalancer
 ---
-### Persistent volume claim
-#apiVersion: v1
-#kind: PersistentVolumeClaim
-#metadata:
-#  name: mysql-pv-claim
-#  labels:
-#    app: wordpress
-#spec:
-#  accessModes:
-#    - ReadWriteOnce
-#  resources:
-#    requests:
-#      storage: 5Gi
-#---
-### Mysql deployment
-apiVersion: apps/v1
-kind: StatefulSet
+### Persistaent Volume Claim
+apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: wordpress-mysql
+  name: mysql-pv-claim
+  labels:
+    app: wordpress
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+### MySQL deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
   labels:
     app: wordpress
 spec:
@@ -41,9 +39,8 @@ spec:
     matchLabels:
       app: wordpress
       tier: mysql
-  replicas: 3
-  updateStrategy:
-    type: RollingUpdate
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
@@ -72,13 +69,12 @@ spec:
         - containerPort: 3306
           name: mysql
         volumeMounts:
-        - name: mysql-storage
+        - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
-  volumeClaimTemplates:
-  - metadata:
-      name: mysql-storage
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 3Gi
+        resources:
+          requests:
+            memory: "2Gi"
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
